@@ -1,0 +1,22 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Build Docker image
+        run: docker build . -t flask-app-demo:latest
+
+      - name: Test application
+        run: |
+          docker compose up -d
+          sleep 20
+          curl -f http://localhost:5000
+          docker compose down
